@@ -1,3 +1,7 @@
+* {
+    margin: 0;
+    padding: 0;
+}
 body {
     text-align: center;
     background-color: rgb(33, 87, 28);
@@ -34,6 +38,7 @@ section {
     box-shadow: 3px 10px 20px 0px black;
     margin: 0;
     padding: 20px;
+    color: transparent;
 }
 .dealerCards {
     background-color: rgb(33, 87, 28);
@@ -51,7 +56,7 @@ section {
 .center {
     grid-row: 3;
     grid-column: 2;
-    font-size: 5rem;
+    font-size: 6rem;
 }
 .suit.top {
     grid-row: 2;
@@ -63,6 +68,9 @@ section {
 .suit.bottom {
     grid-row: 4;
     grid-column: 3;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;  
 }
 .value.bottom {
     grid-row: 5;
@@ -88,7 +96,7 @@ section {
     border: black solid 1px;
     background-color: whitesmoke;
     border-radius: 5%;
-    width: 100px;
+    width: 110px;
     height: 200px;
     padding: 10px;
     margin: 10px;
@@ -96,12 +104,13 @@ section {
     grid-template-rows: 1fr 1fr 3fr 1fr 1fr;
     grid-template-columns: 1fr 5fr 1fr;
     box-shadow: 3px 10px 20px 0px black;
+    position: relative;
 }
 .nextCard {
     border: black solid 1px;
     background-color: whitesmoke;
     border-radius: 5%;
-    width: 100px;
+    width: 110px;
     height: 200px;
     padding: 10px;
     margin: 10px;
@@ -109,6 +118,7 @@ section {
     grid-template-rows: 1fr 1fr 3fr 1fr 1fr;
     grid-template-columns: 1fr 5fr 1fr;
     box-shadow: 3px 10px 20px 0px black;
+    position: relative;
 }
 .bet {
     background-color: rgb(33, 87, 28);
@@ -120,7 +130,7 @@ section {
     grid-column: 2;
     border-radius: 50%;
     width: 100%;
-    max-width: 175px;
+    max-width: 160px;
     height: 150px;
 }
 .hit {
@@ -129,8 +139,6 @@ section {
 }
 .text {
     display: flex;
-    justify-content: center;
-    align-items: center;
     grid-column: 1 / span 4;
     grid-row: 2;
     width: fit-content;
