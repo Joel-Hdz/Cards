@@ -3,9 +3,12 @@ const VALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
 function makeEight() {
     let eightSuits = []
     for (let i = 0; i < 8; i++) {
-        eightSuits += SUITS
+        eightSuits.push(SUITS)
     }
+    return eightSuits.flat(8);
 }
+const EIGHT = makeEight();
+
 export default class Deck {
     constructor(cards = freshDeck()) {
         this.cards = cards;
@@ -54,7 +57,7 @@ class Card {
 }
 
 function freshDeck() {
-    return SUITS.flatMap(suit => {
+    return EIGHT.flatMap(suit => {
         return VALUES.map(value => {
             return new Card(suit, value);
         });
