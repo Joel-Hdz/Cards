@@ -42,9 +42,9 @@ class Card {
         centerDiv.classList.add("center")
         bottomDiv.classList.add("bottom")
         cardDiv.append(topDiv, centerDiv, bottomDiv)
-        topDiv.innerText(`${this.value}${this.suit}`)
-        centerDiv.innerText(`${this.suit}`)
-        bottomDiv.innerText(`${this.suit}${this.value}`)
+        topDiv.innerText = `${this.value}${this.suit}`
+        centerDiv.innerText = `${this.suit}`
+        bottomDiv.innerText = `${this.suit}${this.value}`
         return cardDiv
     }
 }
