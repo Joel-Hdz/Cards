@@ -58,20 +58,24 @@ section {
 .center {
     font-size: 6rem;
 }
+p {
+    margin: 0px;
+}
 .top {
     font-size: 1.5rem;
     position: absolute;
     top: .3rem;
     left: .4rem;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    letter-spacing: -3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .bottom {
     font-size: 1.5rem;
     position: absolute;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     transform: rotate(180deg);
     bottom: .3rem;
     right: .4rem;
@@ -83,7 +87,7 @@ section {
 .black {
     color: black;
 }
-.mycards {
+.myCards {
     background-color: rgb(33, 87, 28);
     display: flex;
     justify-content: center;
