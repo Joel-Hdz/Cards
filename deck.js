@@ -18,7 +18,12 @@ export default class Deck {
         return this.cards.length;
     }
     pull() {
+        return this.cards.shift();
+    }
 
+    push() {
+        this.shuffle()
+        return this.cards.push()
     }
 
     shuffle() {
