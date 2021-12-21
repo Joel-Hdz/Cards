@@ -1,5 +1,6 @@
 const SUITS = ["♠", "♣", "♥", "♦"]
 const VALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+
 function makeEight() {
     let eightSuits = []
     for (let i = 0; i < 8; i++) {
@@ -7,6 +8,7 @@ function makeEight() {
     }
     return eightSuits.flat(8);
 }
+
 const EIGHT = makeEight();
 
 export default class Deck {
@@ -17,11 +19,12 @@ export default class Deck {
     get numberOfCards() {
         return this.cards.length;
     }
+
     pull() {
         return this.cards.shift();
     }
 
-    push() {
+    add2Deck() {
         this.shuffle()
         return this.cards.push()
     }

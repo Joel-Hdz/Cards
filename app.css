@@ -164,15 +164,29 @@ p {
     position: absolute;
     justify-content: center;
     align-items: center;
-    top: 18rem;
+    top: 17rem;
 }
 .betButton {
     display: block;
     padding: 15px 25px;
+    border-radius: 2em;
+}
 }
 .betting {
     display: flex;
     flex-direction: column;
+}
+.sideBets {
+    margin: 1rem;
+}
+.splitButton {
+    border-radius: 2em;
+    padding: 1px 13px;
+    margin-right: 0px;
+}
+.doubleButton {
+    border-radius: 2em;
+    margin-left: 20px;
 }
 .text {
     display: flex;

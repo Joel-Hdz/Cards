@@ -7,6 +7,7 @@ const letsPlay = document.querySelector('.text');
 const discard = document.querySelector('.discard');
 
 let mainDeck
+let trash = []
 
 startGame()
 function startGame() {
@@ -17,7 +18,7 @@ function startGame() {
         cleanBeforRound();
         letsPlay.innerText = 'Place Your Bets!'
     })
-    mainDeck = deck;
+
 }
 function cleanBeforRound() {
     dealerSlot.innerHTML = '<div class="placeHolder"></div><div class="placeHolder"></div>'
@@ -34,17 +35,33 @@ function updateDeck() {
 function throwAway(dealer, player) {
     dealer = dealerSlot
     player = playerSlot
-
 }
-function giveCard() {
-    const playerCard = mainDeck.pop()
-    const dealerCard = mainDeck.pop()
+function beginRound() {
+    const burnCard = mainDeck.pull();
 
-    playerSlot.appendChild(playerCard.getHTML())
-    dealerSlot.appendChild(dealerCard.getHTML())
+    trash.push(burnCard);
+
+    giveCard2Player();
+    giveCard2Dealer();
+    giveCard2Player();
+    dealers2ndCard();
+}
+function dealers2ndCard() {
+    dcard = dealerCard.getHTML()
+    dealerSlot.appendChild(ddcard.classList.add('faceDown'));
+}
+function giveCard2Player() {
+    playerCard = mainDeck.pull();
+
+    playerSlot.appendChild(playerCard.getHTML());
+}
+function giveCard2Dealer() {
+    dealerCard = mainDeck.pull();
+
+    dealerSlot.appendChild(dealerCard.getHTML());
 }
 function hit() {
     hitMe.addEventListener('click', () => {
-        giveCard();
+        giveCard2Player();
     })
 }
