@@ -9,16 +9,14 @@ body {
     background-size: cover;
     display: grid;
     grid-template-columns: 3fr 1fr;
-    grid-template-rows: 4fr 1fr 4fr .5fr;
+    grid-template-rows: 3.7fr 1fr 3.7fr .5fr;
     justify-content: center;
     align-items: center;
     justify-items: center;
     min-height: 100%;
     width: 100%;
     position: relative;
-}
-section {
-    display: flex;
+    margin: 0;
 }
 .stack {
     background-color: rgb(33, 87, 28);
@@ -28,9 +26,9 @@ section {
     grid-column: 2;
     width: 100%;
     max-width: 175px;
-    height: 300px;
+    height: 250px;
     border: black solid 1px;
-    border-radius: 13px;
+    border-radius: 1.5rem;
 }
 .faceDown {
     background-image: url("imgs/CardBack.jpg");
@@ -47,8 +45,8 @@ section {
     align-items: center;
     grid-column: 1;
     width: 100%;
-    max-width: 655px;
-    height: 350px;
+    max-width: 640px;
+    height: 320px;
     border: black solid 1px;
     border-radius: 7%;
     box-shadow: 3px 10px 20px 0px black;
@@ -94,8 +92,8 @@ p {
     grid-column: 1;
     grid-row: 3;
     width: 100%;
-    max-width: 655px;
-    height: 350px;
+    max-width: 640px;
+    height: 320px;
     border: black solid 1px;
     border-radius: 7%;
     box-shadow: 3px 10px 20px 0px black;
@@ -122,14 +120,20 @@ p {
     margin: 10px;
 }
 .discardStack {
-    background-image: url("imgs/CardBack.jpg");
+    background-image: url("imgs/CardBackSide.jpg");
     background-position: center;
+    background-size: contain;
+    background-repeat: space;
+    border-radius: 2rem;
     overflow: hidden;
-    width: 100%;
-    height: 100%;
+    width: 155px;
+    height: 80px;
 }
-.bet {
-    background-color: rgb(33, 87, 28);
+.chip {
+    background-image: url("imgs/Chip.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
     border: rgba(0, 0, 0, 0.534) dashed 5px;
     display: flex;
     justify-content: center;
@@ -145,13 +149,37 @@ p {
     grid-column: 1 / span 4;
     grid-row: 4;
 }
+.hitButton {
+    padding: 15px 25px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background-color: rgba(255, 0, 0, 0.548);
+    border-radius: 2em;
+}
+.buttons {
+    grid-column: 2;
+    grid-row: 3 / span 4;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    top: 18rem;
+}
+.betButton {
+    display: block;
+    padding: 15px 25px;
+}
+.betting {
+    display: flex;
+    flex-direction: column;
+}
 .text {
     display: flex;
     grid-column: 1 / span 4;
     grid-row: 2;
     width: fit-content;
     margin: auto;
-    padding: 20px;
     font-size: 3em;
     font-weight: 800;
     cursor: pointer;
@@ -160,8 +188,11 @@ p {
 .discard {
     border: solid black 1px;
     border-radius: 2rem;
-    height: 100%;
-    width: 80%;
+    height: 100px;
+    width: 160px;
     grid-row: 2;
     grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

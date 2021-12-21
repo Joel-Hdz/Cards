@@ -15,13 +15,14 @@ function startGame() {
 
     letsPlay.addEventListener('click', () => {
         cleanBeforRound();
-
+        letsPlay.innerText = 'Place Your Bets!'
     })
     mainDeck = deck;
 }
 function cleanBeforRound() {
     dealerSlot.innerHTML = '<div class="placeHolder"></div><div class="placeHolder"></div>'
     playerSlot.innerHTML = '<div class="placeHolder"></div><div class="placeHolder"></div>'
+    discard.innerHTML = ''
 
     if (mainDeck.length = 0) {
         updateDeck();
