@@ -18,7 +18,7 @@ function startGame() {
         cleanBeforRound();
         letsPlay.innerText = 'Place Your Bets!'
     })
-
+    mainDeck = deck;
 }
 function cleanBeforRound() {
     dealerSlot.innerHTML = '<div class="placeHolder"></div><div class="placeHolder"></div>'
