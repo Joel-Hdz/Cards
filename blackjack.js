@@ -6,7 +6,8 @@ const hitMe = document.querySelector('.hit');
 const letsPlay = document.querySelector('.text');
 const discard = document.querySelector('.discard');
 
-let mainDeck
+
+let mainDeck, playerCard, dealerCard, dcard
 let trash = []
 
 startGame()
@@ -17,6 +18,7 @@ function startGame() {
     letsPlay.addEventListener('click', () => {
         cleanBeforRound();
         letsPlay.innerText = 'Place Your Bets!'
+        setTimeout(beginRound, 10000);
     })
     mainDeck = deck;
 }
@@ -40,15 +42,24 @@ function beginRound() {
     const burnCard = mainDeck.pull();
 
     trash.push(burnCard);
+    const burned = document.createElement('div')
+    burned.classList.add('discardStack')
+    discard.appendChild(burned)
 
-    giveCard2Player();
-    giveCard2Dealer();
-    giveCard2Player();
-    dealers2ndCard();
+    dealerSlot.innerHTML = ''
+    playerSlot.innerHTML = ''
+
+    setTimeout(giveCard2Player, 1000);
+    setTimeout(giveCard2Dealer, 2000);
+    setTimeout(giveCard2Player, 3000);
+    setTimeout(dealers2ndCard, 4000);
 }
 function dealers2ndCard() {
-    dcard = dealerCard.getHTML()
-    dealerSlot.appendChild(ddcard.classList.add('faceDown'));
+    dcard = mainDeck.pull();
+
+    dealerSlot.appendChild(dcard.getHTML());
+    let secondCard = dealerSlot.children[1];
+    secondCard.classList.add('faceDown');
 }
 function giveCard2Player() {
     playerCard = mainDeck.pull();
