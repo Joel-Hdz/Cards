@@ -115,12 +115,13 @@ p {
     background-image: url("imgs/CardBackSide.png");
     background-position: center;
     background-size: contain;
-    background-repeat: space;
-    border-radius: 2rem;
+    background-repeat: repeat-y;
+    filter: blur(1px);
+    -webkit-filter: blur(.4px);
+    border-radius: 1rem;
     border: 3px white solid;
-    overflow: hidden;
-    width: 8.3rem;
-    height: 5.8rem;
+    width: 9rem;
+    height: 6.4rem;
 }
 .chip {
     background-image: url("imgs/Chip.png");
@@ -147,6 +148,13 @@ p {
     font-size: 1.5rem;
     font-weight: 700;
     background-color: rgba(255, 0, 0, 0.548);
+    border-radius: 2em;
+}
+.standButton {
+    padding: 15px 25px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background-color: rgb(64, 66, 204);
     border-radius: 2em;
 }
 .buttons {
@@ -191,9 +199,12 @@ p {
     cursor: pointer;
     user-select: none;
 }
+#countdown {
+    margin-left: 10px;
+    width: fit-content;
+    height: 100%;
+}
 .discard {
-    border: solid black 1px;
-    border-radius: 2rem;
     height: 100px;
     width: 160px;
     grid-row: 2;
@@ -203,11 +214,9 @@ p {
     align-items: center;
 }
 .faceDown {
-    background-image: url("imgs/CardBack.png");
+    background-image: url("imgs/CardBack.jpg");
     background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    overflow: hidden;
+    background-size: cover;
     border: 5px white solid;
     box-shadow: 3px 10px 20px 0px black;
     margin: 0;

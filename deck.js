@@ -28,7 +28,6 @@ export default class Deck {
         this.shuffle()
         return this.cards.push()
     }
-
     shuffle() {
         for (let i = this.numberOfCards - 1; i > 0; i--) {
             const newindex = Math.floor(Math.random() * (i + 1));
@@ -61,6 +60,9 @@ class Card {
         centerDiv.innerText = `${this.suit}`;
         bottomDiv.innerHTML = `<p>${this.value}</p><p>${this.suit}</p>`;
         return cardDiv;
+    }
+    getValue() {
+        return this.value
     }
 }
 
