@@ -17,7 +17,7 @@ let cardValues = {
 }
 const dealerSlot = document.querySelector('.dealerSlot');
 const playerSlot = document.querySelector('.playerSlot');
-const hitMe = document.querySelector('.hit');
+const hitMe = document.querySelector('.hitButton');
 const letsPlay = document.querySelector('.text');
 const discard = document.querySelector('.discard');
 
