@@ -157,6 +157,10 @@ p {
     background-color: rgb(64, 66, 204);
     border-radius: 2em;
 }
+.bet {
+    display: flex;
+    align-items: center;
+}
 .buttons {
     grid-column: 2;
     grid-row: 3 / span 4;
@@ -169,8 +173,10 @@ p {
 }
 .betButton {
     display: block;
-    padding: 15px 25px;
+    padding: 8px 20px;
     border-radius: 2em;
+    margin-left: 10px;
+    background-color: rgba(255, 0, 0, 0.548);
 }
 .betting {
     display: flex;
@@ -181,12 +187,15 @@ p {
 }
 .splitButton {
     border-radius: 2em;
-    padding: 1px 13px;
+    padding: 6px 13px;
     margin-right: 0px;
+    background-color: rgb(64, 66, 204);
 }
 .doubleButton {
     border-radius: 2em;
     margin-left: 20px;
+    padding: 6px 10px;
+    background-color: rgb(64, 66, 204);
 }
 .text {
     display: flex;

@@ -13,35 +13,63 @@ let cardValues = {
     "J": 10,
     "Q": 10,
     "K": 10,
-    "A": 11,
+    "A": {
+        ten: 11,
+        less: 1
+    }
 }
 const dealerSlot = document.querySelector('.dealerSlot');
 const playerSlot = document.querySelector('.playerSlot');
 const hitMe = document.querySelector('.hitButton');
+const stand = document.querySelector('.standButton');
 const letsPlay = document.querySelector('.text');
 const discard = document.querySelector('.discard');
-
-
+const deck = new Deck();
+deck.shuffle();
+let mainDeck = deck
 let time = 10;
-let mainDeck, playerCard, dealerCard, dcard;
+
+let playerCard, dealerCard, dcard;
 let trash = [];
 let dealerHand = []
 let playerHand = []
+let want2play = true
 
-startGame();
+const gameStart = new Promise((resolve) => {
+    resolve(
+        play()
+    )
+})
+class Game {
+    constructor(blackjack) {
 
-function startGame() {
-    const deck = new Deck();
-    deck.shuffle();
+    }
 
-    letsPlay.addEventListener('click', async () => {
-        cleanBeforRound();
-        announce();
-        setTimeout(beginRound, 11000);
-    })
+}
+class Slot {
+    constructor(player, dealer)
+}
+class Money {
+    constructor(amount, earnings) {
+        this.amount = amount;
+        this.earnings = earnings;
+    }
+    get howMuch() {
+        return
+    }
+}
 
-    hit();
-    mainDeck = deck;
+
+async function play() {
+    return new Promise((resolve, reject) => {
+        if (want2play) {
+            resolve(
+                letsPlay.addEventListener('click', () => {
+                    cleanBeforRound();
+                }, { once: true })
+            )
+        }
+    });
 }
 
 function cleanBeforRound() {
@@ -53,13 +81,20 @@ function cleanBeforRound() {
         updateDeck();
     };
 }
-
 function announce() {
     letsPlay.innerText = 'Place Your Bets!';
     let timer = document.createElement('div');
     timer.setAttribute("id", "countdown");
     letsPlay.appendChild(timer);
-    setInterval(clock, 1000);
+    let interval = setInterval(() => {
+        if (time <= 0) {
+            letsPlay.innerText = 'Good Luck!'
+            clearInterval(interval);
+        } else {
+            timer.innerHTML = `${time}`
+            time--;
+        }
+    }, 1000)
 }
 
 function updateDeck() {
@@ -71,7 +106,16 @@ function throwAway(dealer, player) {
     player = playerSlot
 }
 
-function beginRound() {
+let order = (time, doThis) => {
+    return new Promise((resolve, reject) => {
+        if (want2play) {
+            setTimeout(() => {
+                resolve(doThis());
+            }, time);
+        };
+    })
+}
+async function beginRound() {
     const burnCard = mainDeck.pull();
 
     trash.push(burnCard);
@@ -82,12 +126,12 @@ function beginRound() {
     dealerSlot.innerHTML = ''
     playerSlot.innerHTML = ''
 
-    setTimeout(giveCard2Player, 1000);
-    setTimeout(giveCard2Dealer, 2000);
-    setTimeout(giveCard2Player, 3000);
-    setTimeout(dealers2ndCard, 4000);
-}
 
+    await order(1000, giveCard2Player)
+    await order(1000, giveCard2Dealer)
+    await order(1000, giveCard2Player)
+    await order(1000, dealers2ndCard)
+}
 
 function dealers2ndCard() {
     dcard = mainDeck.pull();
@@ -119,14 +163,8 @@ function hit() {
     hitMe.addEventListener('click', () => {
         giveCard2Player();
     })
-}
-
-function clock() {
-    const countdownEl = document.getElementById('countdown');
-    if (time <= 0) {
-        letsPlay.innerText = 'Good Luck!'
-    } else {
-        countdownEl.innerHTML = `${time}`
-        time--;
-    }
+    stand.addEventListener('click', () => {
+        let secondCard = dealerSlot.children[1];
+        secondCard.classList.remove('faceDown');
+    })
 }

@@ -62,7 +62,10 @@ class Card {
         return cardDiv;
     }
     getValue() {
-        return this.value
+        return {
+            value: this.value,
+            suit: this.suit
+        }
     }
 }
 
