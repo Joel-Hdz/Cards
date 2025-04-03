@@ -1,78 +1,83 @@
-const SUITS = ["♠", "♣", "♥", "♦"]
-const VALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+const SUITS = ["♠", "♣", "♥", "♦"];
+const VALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
-function makeEight() {
-    let eightSuits = []
-    for (let i = 0; i < 8; i++) {
-        eightSuits.push(SUITS)
-    }
-    return eightSuits.flat(8);
-}
-
-const EIGHT = makeEight();
+// Mapping of card ranks to their values in blackjack
+const blackjackCardValues = {
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "10": 10,
+    "J": 10, // Jack
+    "Q": 10, // Queen
+    "K": 10, // King
+    "A": [1, 11] // Ace can be 1 or 11
+};
 
 export default class Deck {
-    constructor(cards = freshDeck()) {
-        this.cards = cards;
+    constructor() {
+        this.cards = []; // Array of card objects
+        this.initializeDeck();
     }
 
-    get numberOfCards() {
-        return this.cards.length;
+    // Initialize the deck with 8 decks by default
+    initializeDeck(numDecks = 8) {
+        this.cards = Array(numDecks)
+            .fill()
+            .flatMap(() => this.createSingleDeck());
+
+        // Validate deck size
+        const expectedCards = numDecks * SUITS.length * VALUES.length;
+        if (this.cards.length !== expectedCards) {
+            throw new Error(`Deck initialization failed. Expected ${expectedCards} cards, but got ${this.cards.length}.`);
+        }
+
+        console.log(`${numDecks} decks initialized with ${this.cards.length} cards.`);
+    }
+
+    createSingleDeck() {
+        return SUITS.flatMap((suit) =>
+            VALUES.map((rank) => new Card(rank, suit))
+        );
+    }
+    shuffle() {
+        this.cards.sort(() => Math.random() - 0.5);
     }
 
     pull() {
-        return this.cards.shift();
-    }
-
-    add2Deck() {
-        this.shuffle()
-        return this.cards.push()
-    }
-    shuffle() {
-        for (let i = this.numberOfCards - 1; i > 0; i--) {
-            const newindex = Math.floor(Math.random() * (i + 1));
-            const oldValue = this.cards[newindex];
-            this.cards[newindex] = this.cards[i];
-            this.cards[i] = oldValue;
-        }
+        return this.cards.shift(); // Remove and return the first card
     }
 }
+
 class Card {
-    constructor(suit, value) {
+    constructor(rank, suit) {
+        this.rank = rank;
         this.suit = suit;
-        this.value = value;
     }
 
-    get color() {
-        return this.suit === '♠' || this.suit === '♣' ? 'black' : 'red'
-    }
     getHTML() {
-        const cardDiv = document.createElement('div');
-        const topDiv = document.createElement('div');
-        const centerDiv = document.createElement('div');
-        const bottomDiv = document.createElement('div');
-        cardDiv.classList.add("card", this.color);
-        topDiv.classList.add("top");
-        centerDiv.classList.add("center");
-        bottomDiv.classList.add("bottom");
-        cardDiv.append(topDiv, centerDiv, bottomDiv);
-        topDiv.innerHTML = `<p>${this.value}</p><p>${this.suit}</p>`;
-        centerDiv.innerText = `${this.suit}`;
-        bottomDiv.innerHTML = `<p>${this.value}</p><p>${this.suit}</p>`;
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("card");
+        cardDiv.innerHTML = `
+            <div class="top">${this.rank} ${this.suit}</div>
+            <div class="center">${this.suit}</div>
+            <div class="bottom">${this.rank} ${this.suit}</div>
+        `;
         return cardDiv;
     }
-    getValue() {
-        return {
-            value: this.value,
-            suit: this.suit
-        }
-    }
-}
 
-function freshDeck() {
-    return EIGHT.flatMap(suit => {
-        return VALUES.map(value => {
-            return new Card(suit, value);
-        });
-    });
+    getValue(currentTotal = 0) {
+        const value = blackjackCardValues[this.rank];
+
+        if (Array.isArray(value)) {
+            // Handle Ace: Return 11 if it doesn't cause a bust, otherwise return 1
+            return currentTotal + 11 <= 21 ? 11 : 1;
+        }
+
+        return value; // Return the numerical value for other cards
+    }
 }

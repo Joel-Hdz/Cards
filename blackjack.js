@@ -1,170 +1,263 @@
-import Deck from "./deck.js"
+import Deck from "./deck.js";
 
-let cardValues = {
-    "2": 2,
-    "3": 3,
-    "4": 4,
-    "5": 5,
-    "6": 6,
-    "7": 7,
-    "8": 8,
-    "9": 9,
-    "10": 10,
-    "J": 10,
-    "Q": 10,
-    "K": 10,
-    "A": {
-        ten: 11,
-        less: 1
-    }
-}
+// DOM Elements
 const dealerSlot = document.querySelector('.dealerSlot');
 const playerSlot = document.querySelector('.playerSlot');
 const hitMe = document.querySelector('.hitButton');
 const stand = document.querySelector('.standButton');
 const letsPlay = document.querySelector('.text');
 const discard = document.querySelector('.discard');
-const deck = new Deck();
-deck.shuffle();
-let mainDeck = deck
+
+// Deck Initialization
+const freshDeck = new Deck();
+freshDeck.shuffle();
+let mainDeck = freshDeck;
+
+// Game State Variables
 let time = 10;
-
-let playerCard, dealerCard, dcard;
+let playerCard, dealerCard, dealerSecondCard;
 let trash = [];
-let dealerHand = []
-let playerHand = []
-let want2play = true
+let dealerHand = [];
+let playerHand = [];
+let isGameActive = true;
 
+// Start the game
 const gameStart = new Promise((resolve) => {
     resolve(
         play()
-    )
-})
+            .then(() => {
+                console.log('Game started successfully');
+            })
+            .catch((error) => {
+                console.error('Error starting the game:', error);
+            })
+    );
+});
+
+// Game Class
 class Game {
-    constructor(blackjack) {
-
+    constructor() {
+        this.isActive = false;
     }
+    start() {
+        this.isActive = true;
+        console.log("Game started!");
+    }
+}
 
-}
+// Slot Class
 class Slot {
-    constructor(player, dealer)
+    constructor(player, dealer) {
+        this.player = player;
+        this.dealer = dealer;
+    }
 }
+
+// Money Class
 class Money {
-    constructor(amount, earnings) {
+    constructor(amount) {
         this.amount = amount;
-        this.earnings = earnings;
     }
     get howMuch() {
-        return
+        return this.amount;
+    }
+    set howMuch(value) {
+        this.amount = value;
     }
 }
 
-
+// Main Game Logic
 async function play() {
-    return new Promise((resolve, reject) => {
-        if (want2play) {
-            resolve(
-                letsPlay.addEventListener('click', () => {
-                    cleanBeforRound();
-                }, { once: true })
-            )
+    return new Promise((resolve) => {
+        if (isGameActive) {
+            letsPlay.addEventListener(
+                'click',
+                async () => {
+                    cleanBeforeRound(); // Reset the board
+                    resolve(); // Resolve the Promise
+                    announce(); // Announce the game status
+                    await beginRound(); // Wait for the round setup to complete
+                    score(); // Calculate and log the scores
+                    hit(); // Handle player actions
+                },
+                { once: true }
+            );
         }
     });
 }
 
-function cleanBeforRound() {
-    dealerSlot.innerHTML = '<div class="placeHolder"></div><div class="placeHolder"></div>'
-    playerSlot.innerHTML = '<div class="placeHolder"></div><div class="placeHolder"></div>'
-    discard.innerHTML = ''
+// Reset the board for a new round
+function cleanBeforeRound() {
+    // Clear only the cards in the dealer and player slots
+    while (dealerSlot.firstChild) {
+        dealerSlot.removeChild(dealerSlot.firstChild);
+    }
+    while (playerSlot.firstChild) {
+        playerSlot.removeChild(playerSlot.firstChild);
+    }
 
-    if (mainDeck.length = 0) {
+    // Add placeholder elements to maintain the appearance of card outlines
+    for (let i = 0; i < 2; i++) {
+        const dealerPlaceholder = document.createElement('div');
+        dealerPlaceholder.classList.add('card', 'placeholder');
+        dealerSlot.appendChild(dealerPlaceholder);
+
+        const playerPlaceholder = document.createElement('div');
+        playerPlaceholder.classList.add('card', 'placeholder');
+        playerSlot.appendChild(playerPlaceholder);
+    }
+
+    // Keep the discard pile intact
+    console.log("Preparing for the next round...");
+
+    // Check if the deck is empty and update it if necessary
+    if (mainDeck.length === 0) {
         updateDeck();
-    };
+    }
 }
+
+// Announce the game status
 function announce() {
     letsPlay.innerText = 'Place Your Bets!';
-    let timer = document.createElement('div');
-    timer.setAttribute("id", "countdown");
+    const timer = document.createElement('div');
+    timer.setAttribute('id', 'countdown');
     letsPlay.appendChild(timer);
-    let interval = setInterval(() => {
+
+    const interval = setInterval(() => {
         if (time <= 0) {
-            letsPlay.innerText = 'Good Luck!'
+            letsPlay.innerText = 'Good Luck!';
             clearInterval(interval);
         } else {
-            timer.innerHTML = `${time}`
+            timer.innerHTML = `${time}`;
             time--;
         }
-    }, 1000)
+    }, 1000);
 }
 
+// Update the deck when it runs out
 function updateDeck() {
-
+    mainDeck = new Deck();
+    mainDeck.shuffle();
+    console.log("Deck updated and shuffled.");
 }
 
+// Discard cards
 function throwAway(dealer, player) {
-    dealer = dealerSlot
-    player = playerSlot
+    trash.push(...dealer, ...player);
 }
 
-let order = (time, doThis) => {
-    return new Promise((resolve, reject) => {
-        if (want2play) {
-            setTimeout(() => {
-                resolve(doThis());
-            }, time);
-        };
-    })
+// Delay execution with a promise
+function order(time, doThis) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(doThis());
+        }, time);
+    });
 }
+
+// Begin a new round
 async function beginRound() {
+    console.log("Starting a new round...");
+
     const burnCard = mainDeck.pull();
-
+    console.log("Burn card:", burnCard);
     trash.push(burnCard);
-    const burned = document.createElement('div')
-    burned.classList.add('discardStack')
-    discard.appendChild(burned)
 
-    dealerSlot.innerHTML = ''
-    playerSlot.innerHTML = ''
+    dealerSlot.innerHTML = '';
+    playerSlot.innerHTML = '';
 
+    console.log("Dealing cards...");
+    await order(1000, givePlayerACard); // Player's first card
+    await order(1000, giveCardToDealer); // Dealer's first card
+    await order(1000, givePlayerACard); // Player's second card
+    await order(1000, dealersSecondCard); // Dealer's second card (face down)
 
-    await order(1000, giveCard2Player)
-    await order(1000, giveCard2Dealer)
-    await order(1000, giveCard2Player)
-    await order(1000, dealers2ndCard)
+    console.log("Round setup complete.");
 }
 
-function dealers2ndCard() {
-    dcard = mainDeck.pull();
+// Dealer's second card
+function dealersSecondCard() {
+    dealerSecondCard = mainDeck.pull();
+    dealerSlot.appendChild(dealerSecondCard.getHTML());
 
-    dealerSlot.appendChild(dcard.getHTML());
-    let secondCard = dealerSlot.children[1];
+    const secondCard = dealerSlot.children[1];
     secondCard.classList.add('faceDown');
-    let value = dcard.getValue();
+
+    const value = dealerSecondCard.getValue();
     dealerHand.push(value);
 }
 
-function giveCard2Player() {
+// Give a card to the player
+function givePlayerACard() {
     playerCard = mainDeck.pull();
-
     playerSlot.appendChild(playerCard.getHTML());
-    let value = playerCard.getValue();
+
+    const value = playerCard.getValue();
     playerHand.push(value);
 }
 
-function giveCard2Dealer() {
+// Give a card to the dealer
+function giveCardToDealer() {
     dealerCard = mainDeck.pull();
-
     dealerSlot.appendChild(dealerCard.getHTML());
-    let value = dealerCard.getValue();
+
+    const value = dealerCard.getValue(); // Map rank to value
     dealerHand.push(value);
 }
 
+// Handle player actions
 function hit() {
-    hitMe.addEventListener('click', () => {
-        giveCard2Player();
-    })
+    hitMe.addEventListener('click',
+        () => {
+            givePlayerACard(); // Give the player another card
+            updateScore(); // Update the score after hitting
+        });
+
     stand.addEventListener('click', () => {
-        let secondCard = dealerSlot.children[1];
+        const secondCard = dealerSlot.children[1];
         secondCard.classList.remove('faceDown');
-    })
+    });
+}
+
+// Calculate the score of the player and dealer hands
+function score() {
+    const playerScore = calculateHandScore(playerHand);
+    const dealerScore = calculateHandScore(dealerHand);
+
+    console.log("Player score:", playerScore);
+    console.log("Dealer score:", dealerScore);
+}
+
+function calculateHandScore(hand) {
+    let total = 0;
+    let aces = 0;
+
+    // Calculate the total score and count the number of Aces
+    hand.forEach((card) => {
+        if (card === "A") {
+            aces++;
+            total += 11; // Initially treat Ace as 11
+        } else {
+            total += card; // Add the value of non-Ace cards
+        }
+    });
+
+    // Adjust for Aces if the total exceeds 21
+    while (total > 21 && aces > 0) {
+        total -= 10; // Convert an Ace from 11 to 1
+        aces--;
+    }
+
+    return total;
+}
+
+function updateScore() {
+    const playerScore = calculateHandScore(playerHand);
+    console.log("Updated Player score:", playerScore);
+
+    // Check if the player has busted
+    if (playerScore > 21) {
+        console.log("Player busted!");
+        // Handle player bust logic here (e.g., end the round, declare dealer as winner)
+    }
 }

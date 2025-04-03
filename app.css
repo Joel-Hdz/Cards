@@ -1,4 +1,7 @@
-*, *::after, *::before {
+/* General Reset */
+*,
+*::after,
+*::before {
     box-sizing: border-box;
 }
 
@@ -18,6 +21,7 @@ body {
     position: relative;
     margin: 0;
 }
+
 .stack {
     background-color: rgb(33, 87, 28);
     display: flex;
@@ -30,6 +34,7 @@ body {
     border: black solid 1px;
     border-radius: 1.5rem;
 }
+
 .dealerSlot {
     background-color: rgb(33, 87, 28);
     display: flex;
@@ -44,12 +49,15 @@ body {
     box-shadow: 3px 10px 20px 0px black;
     user-select: none;
 }
+
 .center {
     font-size: 6rem;
 }
+
 p {
     margin: 0px;
 }
+
 .top {
     font-size: 1.5rem;
     position: absolute;
@@ -59,6 +67,7 @@ p {
     flex-direction: column;
     align-items: center;
 }
+
 .bottom {
     font-size: 1.5rem;
     position: absolute;
@@ -70,12 +79,15 @@ p {
     right: .4rem;
     letter-spacing: -2px;
 }
+
 .red {
     color: red;
 }
+
 .black {
     color: black;
 }
+
 .playerSlot {
     background-color: rgb(33, 87, 28);
     display: flex;
@@ -91,6 +103,7 @@ p {
     box-shadow: 3px 10px 20px 0px black;
     user-select: none;
 }
+
 .card {
     border: black solid 1px;
     background-color: whitesmoke;
@@ -104,6 +117,7 @@ p {
     box-shadow: 3px 10px 20px 0px black;
     position: relative;
 }
+
 .placeHolder {
     border: solid 2px black;
     width: 7.5rem;
@@ -111,18 +125,17 @@ p {
     border-radius: 1rem;
     margin: 10px;
 }
+
 .discardStack {
     background-image: url("imgs/CardBackSide.png");
     background-position: center;
     background-size: contain;
-    background-repeat: repeat-y;
-    filter: blur(1px);
-    -webkit-filter: blur(.4px);
     border-radius: 1rem;
     border: 3px white solid;
     width: 9rem;
     height: 6.4rem;
 }
+
 .chip {
     background-image: url("imgs/Chip.png");
     background-position: center;
@@ -139,10 +152,12 @@ p {
     max-width: 160px;
     height: 150px;
 }
+
 .hit {
     grid-column: 1 / span 4;
     grid-row: 4;
 }
+
 .hitButton {
     padding: 15px 25px;
     font-size: 1.5rem;
@@ -150,6 +165,7 @@ p {
     background-color: rgba(255, 0, 0, 0.548);
     border-radius: 2em;
 }
+
 .standButton {
     padding: 15px 25px;
     font-size: 1.5rem;
@@ -157,10 +173,12 @@ p {
     background-color: rgb(64, 66, 204);
     border-radius: 2em;
 }
+
 .bet {
     display: flex;
     align-items: center;
 }
+
 .buttons {
     grid-column: 2;
     grid-row: 3 / span 4;
@@ -171,6 +189,7 @@ p {
     align-items: center;
     top: 17rem;
 }
+
 .betButton {
     display: block;
     padding: 8px 20px;
@@ -178,25 +197,30 @@ p {
     margin-left: 10px;
     background-color: rgba(255, 0, 0, 0.548);
 }
+
 .betting {
     display: flex;
     flex-direction: column;
 }
+
 .sideBets {
     margin: 1rem;
 }
+
 .splitButton {
     border-radius: 2em;
     padding: 6px 13px;
     margin-right: 0px;
     background-color: rgb(64, 66, 204);
 }
+
 .doubleButton {
     border-radius: 2em;
     margin-left: 20px;
     padding: 6px 10px;
     background-color: rgb(64, 66, 204);
 }
+
 .text {
     display: flex;
     grid-column: 1 / span 4;
@@ -208,11 +232,13 @@ p {
     cursor: pointer;
     user-select: none;
 }
+
 #countdown {
     margin-left: 10px;
     width: fit-content;
     height: 100%;
 }
+
 .discard {
     height: 100px;
     width: 160px;
@@ -222,6 +248,7 @@ p {
     justify-content: center;
     align-items: center;
 }
+
 .faceDown {
     background-image: url("imgs/CardBack.jpg");
     background-position: center;
@@ -230,4 +257,16 @@ p {
     box-shadow: 3px 10px 20px 0px black;
     margin: 0;
     color: transparent;
+}
+
+/* Placeholder card styling */
+.card.placeholder {
+    border: 2px solid gray;
+    width: 120px;
+    /* Adjust to match your card dimensions */
+    height: 170px;
+    /* Adjust to match your card dimensions */
+    background-color: transparent;
+    display: inline-block;
+    margin: 5px;
 }
