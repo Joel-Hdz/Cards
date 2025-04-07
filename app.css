@@ -174,7 +174,7 @@ p {
     border-radius: 2em;
 }
 
-.bet {
+.betting-area {
     display: flex;
     align-items: center;
 }
@@ -190,7 +190,7 @@ p {
     top: 17rem;
 }
 
-.betButton {
+#submit-bet {
     display: block;
     padding: 8px 20px;
     border-radius: 2em;
@@ -207,14 +207,14 @@ p {
     margin: 1rem;
 }
 
-.splitButton {
+#splitButton {
     border-radius: 2em;
     padding: 6px 13px;
     margin-right: 0px;
     background-color: rgb(64, 66, 204);
 }
 
-.doubleButton {
+#doubleButton {
     border-radius: 2em;
     margin-left: 20px;
     padding: 6px 10px;

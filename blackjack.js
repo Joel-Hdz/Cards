@@ -85,12 +85,11 @@ async function play() {
             letsPlay.addEventListener(
                 'click',
                 async () => {
-                    cleanBeforeRound(); // Reset the board for a new round
                     resolve(); // Resolve the promise to indicate the game has started
-                    announce(); // Announce the game status
+                    const betAmount = await announce(); // Wait for the player to place a bet
                     await beginRound(); // Set up the round (deal cards, etc.)
                     score(); // Calculate and log the scores
-                    hit(); // Handle player actions (Hit or Stand)
+                    hit(betAmount); // Handle player actions (Hit or Stand)
                 },
                 { once: true } // Ensure the event listener is only triggered once
             );
@@ -132,19 +131,35 @@ function cleanBeforeRound() {
 // Displays a countdown timer and updates the game message
 function announce() {
     letsPlay.innerText = 'Place Your Bets!';
-    const timer = document.createElement('div');
-    timer.setAttribute('id', 'countdown');
-    letsPlay.appendChild(timer);
+    const bettingArea = document.querySelector('.betting-area');
+    const betInput = document.querySelector('#bet-input');
+    const submitBetButton = document.querySelector('#submit-bet');
+    const balanceDisplay = document.querySelector('.balance-display');
 
-    const interval = setInterval(() => {
-        if (time <= 0) {
-            letsPlay.innerText = 'Good Luck!';
-            clearInterval(interval);
-        } else {
-            timer.innerHTML = `${time}`;
-            time--;
-        }
-    }, 1000);
+    // Show the betting area
+    balanceDisplay.innerText = `$${playerMoney.howMuch}`;
+
+    // Return a Promise that resolves when the player submits a valid bet
+    return new Promise((resolve) => {
+        submitBetButton.addEventListener('click', () => {
+            const betAmount = parseInt(betInput.value);
+
+            if (isNaN(betAmount) || betAmount <= 0) {
+                console.log("Invalid bet amount. Please try again.");
+                return;
+            }
+
+            if (!placeBet(betAmount)) {
+                console.log("Bet failed. Not enough money.");
+                return;
+            }
+
+            console.log(`Bet of $${betAmount} placed successfully.`);
+            balanceDisplay.innerText = `$${playerMoney.howMuch}`;
+            letsPlay.innerText = `$${betAmount}. Starting round...`;
+            resolve(betAmount); // Resolve the Promise with the bet amount
+        });
+    });
 }
 
 // Update the deck when it runs out
@@ -227,41 +242,72 @@ function giveCardToDealer() {
 
 // Handle player actions
 // Adds event listeners for the "Hit" and "Stand" buttons
-function hit() {
+function hit(betAmount) {
     hitMe.addEventListener('click', () => {
         givePlayerACard(); // Give the player another card
         updateScore(); // Update the score after hitting
+
+        const playerScore = calculateHandScore(playerHand); // Calculate the player's score
+
+        if (playerScore >= 21) {
+            // Disable the "Hit Me" button if the player hits 21 or busts
+            hitMe.disabled = true;
+
+            if (playerScore > 21) {
+                console.log("Player busted! Dealer wins.");
+            } else {
+                console.log("Player hit 21!");
+            }
+
+            // Automatically proceed to the dealer's turn
+            playersDone(betAmount);
+        }
     });
 
     standButton.addEventListener('click', () => {
-        playersDone(); // Run the playersDone function when the stand button is clicked
+        hitMe.disabled = true; // Disable the "Hit Me" button when the player stands
+        playersDone(betAmount); // Run the playersDone function when the stand button is clicked
     });
 }
 
 // Handle the end of the player's turn
 // Reveals the dealer's second card and proceeds to the dealer's turn
-function playersDone() {
+async function playersDone(betAmount) {
     console.log("Player finished their turn.");
     const secondCard = dealerSlot.children[1];
     secondCard.classList.remove('faceDown'); // Reveal the dealer's second card
 
-    const playerScore = calculateHandScore(playerHand);
-    if (playerScore > 21) {
-        console.log("Player busted! Dealer wins.");
-        return;
-    }
+    const playerScore = calculateHandScore(playerHand); // Calculate the player's score
 
-    DealersTurn(); // Proceed to the dealer's turn
+    // Update the game message during the delay
+    letsPlay.innerText = "Dealer's turn is starting...";
+
+    // Add a delay before the dealer's turn starts
+    await order(1000, () => {
+        console.log("Starting dealer's turn...");
+        DealersTurn(playerScore); // Pass the player's score to the dealer's turn
+    });
+
+    const dealerScore = calculateHandScore(dealerHand);
+    determineWinner(playerScore, dealerScore, betAmount); // Determine the winner
 }
 
 // Dealer's turn
 // Handles the dealer's actions (e.g., hitting until the score is 17 or higher)
-function DealersTurn() {
+function DealersTurn(playerScore) {
     console.log("Dealer's turn...");
+
+    // If the player has already busted, the dealer does not take another card
+    if (playerScore > 21) {
+        console.log("Player busted! Dealer does not take another card.");
+        return; // Exit the dealer's turn
+    }
+
     let dealerScore = calculateHandScore(dealerHand);
 
+    // Dealer hits until their score is 17 or higher
     while (dealerScore < 17) {
-        giveCardToDealer(); // Dealer hits until reaching 17 or higher
+        giveCardToDealer(); // Dealer takes another card
         dealerScore = calculateHandScore(dealerHand);
     }
 
@@ -275,6 +321,7 @@ function score() {
     const dealerScore = calculateHandScore(dealerHand);
 
     console.log("Player score:", playerScore);
+    letsPlay.innerText = `Player score: ${playerScore}`; // Update the game message with the player's score
     console.log("Dealer score:", dealerScore);
 }
 
@@ -305,13 +352,9 @@ function calculateHandScore(hand) {
 // Logs the player's updated score and checks if they busted
 function updateScore() {
     const playerScore = calculateHandScore(playerHand);
+    letsPlay.innerText = `Player score: ${playerScore}`; // Update the game message with the player's score
     console.log("Updated Player score:", playerScore);
-
-    if (playerScore > 21) {
-        console.log("Player busted!");
-    }
 }
-
 
 // placing bets
 function placeBet(amount) {
@@ -327,4 +370,37 @@ function placeBet(amount) {
 function payout(amount) {
     playerMoney.howMuch += amount;
     console.log(`You won $${amount}! New balance: $${playerMoney.howMuch}`);
+}
+function determineWinner(playerScore, dealerScore, betAmount) {
+    standButton.disabled = true; // Disable the stand button after the game ends
+    if (playerScore > 21) {
+        console.log("Player busted! Dealer wins.");
+        letsPlay.innerText = "Player busted! Dealer wins.";
+        return "lose";
+    }
+
+    if (dealerScore > 21) {
+        console.log("Dealer busted! Player wins.");
+        letsPlay.innerText = "Dealer busted! Player wins.";
+        payout(betAmount * 2); // Player wins double their bet
+        return "win";
+    }
+
+    if (playerScore > dealerScore) {
+        console.log("Player wins!");
+        letsPlay.innerText = "Player wins!";
+        payout(betAmount * 2); // Player wins double their bet
+        return "win";
+    }
+
+    if (playerScore < dealerScore) {
+        console.log("Dealer wins.");
+        letsPlay.innerText = "Dealer wins.";
+        return "lose";
+    }
+
+    console.log("It's a tie!");
+    letsPlay.innerText = "It's a tie!";
+    payout(betAmount); // Return the player's bet
+    return "tie";
 }
