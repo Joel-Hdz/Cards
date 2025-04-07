@@ -367,10 +367,17 @@ function placeBet(amount) {
     return true;
 }
 
-function payout(amount) {
-    playerMoney.howMuch += amount;
-    console.log(`You won $${amount}! New balance: $${playerMoney.howMuch}`);
+function updateBalanceDisplay() {
+    const balanceDisplay = document.querySelector('.balance-display'); // Select the balance display element
+    balanceDisplay.innerText = `$${playerMoney.howMuch}`; // Update the text with the current balance
 }
+
+function payout(amount) {
+    playerMoney.howMuch += amount; // Add the winnings
+    console.log(`You won $${amount}! New balance: $${playerMoney.howMuch}`);
+    updateBalanceDisplay(); // Update the balance display
+}
+
 function determineWinner(playerScore, dealerScore, betAmount) {
     standButton.disabled = true; // Disable the stand button after the game ends
     if (playerScore > 21) {
@@ -390,6 +397,7 @@ function determineWinner(playerScore, dealerScore, betAmount) {
         console.log("Player wins!");
         letsPlay.innerText = "Player wins!";
         payout(betAmount * 2); // Player wins double their bet
+        console.log("Player's payout:", betAmount * 2);
         return "win";
     }
 
